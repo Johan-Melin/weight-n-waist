@@ -175,6 +175,12 @@ export default async function TrackerPage({
       <section className="space-y-4">
         <div className="flex flex-wrap items-center gap-3">
           <h2 className="text-base font-semibold">Entries</h2>
+          <a
+            href="/api/export"
+            className="text-xs px-2.5 py-1 border rounded-md font-medium border-current/20 hover:border-current/50 transition-colors"
+          >
+            Export CSV
+          </a>
           {years.length > 0 && (
             <div className="flex items-center gap-1.5 ml-auto">
               <Link
