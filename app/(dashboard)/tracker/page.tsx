@@ -7,6 +7,7 @@ import {
   type ChartMeasurement,
 } from "../_components/MeasurementsChart";
 import { DeleteButton } from "../_components/DeleteButton";
+import { ImportForm } from "../_components/ImportForm";
 
 type Measurement = {
   id: string;
@@ -181,6 +182,7 @@ export default async function TrackerPage({
           >
             Export CSV
           </a>
+          <ImportForm />
           {years.length > 0 && (
             <div className="flex items-center gap-1.5 ml-auto">
               <Link
