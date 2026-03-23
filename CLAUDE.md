@@ -94,3 +94,25 @@ if (yearFilter) {
 
 ### Linting
 Use `npm run lint`, not `npx next lint` (the latter misinterprets the command in some shells).
+
+### Safari zooms in on input focus
+Safari auto-zooms the viewport when an input receives focus if its `font-size` is below 16px. Tailwind's `text-sm` is 14px — enough to trigger it. Fix globally in `globals.css`:
+```css
+input, select, textarea {
+  font-size: 16px;
+}
+```
+
+### Content and inputs overflowing their containers
+Flex children can exceed their parent's width if not constrained. Date and number inputs inside a `flex` row are common offenders. Always add `min-w-0` alongside `flex-1` on inputs that should grow:
+```tsx
+<input className="flex-1 min-w-0 ..." />
+```
+For rows with many items (e.g. filter controls + date range), split into multiple rows rather than relying on `flex-wrap` — wrapping is unpredictable across screen sizes. Auth pages also need `px-4` on the outer wrapper so the form never touches screen edges on narrow phones.
+
+### Mobile padding and margins
+Always check padding at mobile widths. Specific patterns that bite:
+- Auth pages (`/login`, `/signup`): the centering wrapper needs `px-4`, otherwise inputs reach the screen edge.
+- Card sections: `p-4` is the right card padding; `p-6` feels too large and wastes space on mobile.
+- Nav/main layout: use `px-4 sm:px-6` on wrappers so content breathes on small screens.
+- Touch targets: interactive elements (icon buttons, small pills) should be at least 44×44px tappable area. Wrap small icons in a `p-2` button if needed.
