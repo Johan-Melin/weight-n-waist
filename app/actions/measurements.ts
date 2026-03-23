@@ -158,6 +158,22 @@ export async function importMeasurements(
   return { imported, skipped };
 }
 
+export async function updateMeasurement(
+  id: string,
+  measured_at: string,
+  weight_kg: number | null,
+  waist_cm: number | null
+): Promise<void> {
+  if (weight_kg === null && waist_cm === null) return;
+  const user = await getUser();
+  await sql`
+    UPDATE measurements
+    SET measured_at = ${measured_at}, weight_kg = ${weight_kg}, waist_cm = ${waist_cm}
+    WHERE id = ${id} AND user_id = ${user.id}
+  `;
+  revalidatePath("/tracker");
+}
+
 export async function deleteMeasurement(id: string): Promise<void> {
   const user = await getUser();
   await sql`

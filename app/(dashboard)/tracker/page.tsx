@@ -6,7 +6,7 @@ import {
   MeasurementsChart,
   type ChartMeasurement,
 } from "../_components/MeasurementsChart";
-import { DeleteButton } from "../_components/DeleteButton";
+import { EntryRow } from "../_components/EntryRow";
 import { ImportForm } from "../_components/ImportForm";
 
 type Measurement = {
@@ -234,23 +234,11 @@ export default async function TrackerPage({
                 </thead>
                 <tbody>
                   {entries.map((entry) => (
-                    <tr
+                    <EntryRow
                       key={entry.id}
-                      className="border-b last:border-0 hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
-                    >
-                      <td className="py-2.5 pr-6 tabular-nums">
-                        {parseDay(entry.measured_at).toLocaleDateString()}
-                      </td>
-                      <td className="py-2.5 pr-6 tabular-nums">
-                        {toDisplay(entry.weight_kg, 2.20462, unitSystem)}
-                      </td>
-                      <td className="py-2.5 pr-6 tabular-nums">
-                        {toDisplay(entry.waist_cm, 0.393701, unitSystem)}
-                      </td>
-                      <td className="py-2.5 text-right">
-                        <DeleteButton id={entry.id} />
-                      </td>
-                    </tr>
+                      entry={entry}
+                      unitSystem={unitSystem}
+                    />
                   ))}
                 </tbody>
               </table>
