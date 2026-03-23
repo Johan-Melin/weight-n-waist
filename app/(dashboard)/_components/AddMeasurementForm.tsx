@@ -7,28 +7,22 @@ type UnitSystem = "metric" | "imperial";
 
 const today = () => new Date().toISOString().split("T")[0];
 
-export function AddMeasurementForm({
-  unitSystem,
-}: {
-  unitSystem: UnitSystem;
-}) {
-  const [state, formAction, isPending] = useActionState(addMeasurement, {});
+const inputClass =
+  "border border-black/[0.08] dark:border-white/[0.08] rounded-lg px-3 py-2 text-sm bg-background focus:outline-none focus:ring-2 focus:ring-foreground/10";
 
+export function AddMeasurementForm({ unitSystem }: { unitSystem: UnitSystem }) {
+  const [state, formAction, isPending] = useActionState(addMeasurement, {});
   const isImperial = unitSystem === "imperial";
-  const weightLabel = isImperial ? "Weight (lbs)" : "Weight (kg)";
-  const waistLabel = isImperial ? "Waist (in)" : "Waist (cm)";
-  const weightPlaceholder = isImperial ? "e.g. 165.0" : "e.g. 75.5";
-  const waistPlaceholder = isImperial ? "e.g. 32.5" : "e.g. 85.0";
 
   return (
     <form
       action={formAction}
-      className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_1fr_auto] gap-3 items-end max-w-2xl"
+      className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_1fr_auto] gap-3 items-end"
     >
       <input type="hidden" name="unit_system" value={unitSystem} />
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="measured_at" className="text-sm font-medium">
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="measured_at" className="text-xs font-medium opacity-50">
           Date
         </label>
         <input
@@ -37,16 +31,16 @@ export function AddMeasurementForm({
           type="date"
           defaultValue={today()}
           required
-          className="border rounded-lg px-3 py-2 text-sm bg-background"
+          className={inputClass}
         />
         {state.errors?.measured_at && (
           <p className="text-red-500 text-xs">{state.errors.measured_at[0]}</p>
         )}
       </div>
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="weight_kg" className="text-sm font-medium">
-          {weightLabel}
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="weight_kg" className="text-xs font-medium text-blue-500/70">
+          {isImperial ? "Weight (lbs)" : "Weight (kg)"}
         </label>
         <input
           id="weight_kg"
@@ -54,17 +48,17 @@ export function AddMeasurementForm({
           type="number"
           step="0.1"
           min="0"
-          placeholder={weightPlaceholder}
-          className="border rounded-lg px-3 py-2 text-sm bg-background"
+          placeholder={isImperial ? "e.g. 165.0" : "e.g. 75.5"}
+          className={inputClass}
         />
         {state.errors?.weight_kg && (
           <p className="text-red-500 text-xs">{state.errors.weight_kg[0]}</p>
         )}
       </div>
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="waist_cm" className="text-sm font-medium">
-          {waistLabel}
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="waist_cm" className="text-xs font-medium text-orange-500/70">
+          {isImperial ? "Waist (in)" : "Waist (cm)"}
         </label>
         <input
           id="waist_cm"
@@ -72,22 +66,22 @@ export function AddMeasurementForm({
           type="number"
           step="0.1"
           min="0"
-          placeholder={waistPlaceholder}
-          className="border rounded-lg px-3 py-2 text-sm bg-background"
+          placeholder={isImperial ? "e.g. 32.5" : "e.g. 85.0"}
+          className={inputClass}
         />
         {state.errors?.waist_cm && (
           <p className="text-red-500 text-xs">{state.errors.waist_cm[0]}</p>
         )}
       </div>
 
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1.5">
         {state.message && (
           <p className="text-red-500 text-xs">{state.message}</p>
         )}
         <button
           type="submit"
           disabled={isPending}
-          className="bg-foreground text-background px-4 py-2 rounded-lg text-sm font-medium disabled:opacity-50 whitespace-nowrap"
+          className="bg-foreground text-background px-4 py-2 rounded-lg text-sm font-medium disabled:opacity-40 whitespace-nowrap transition-opacity"
         >
           {isPending ? "Saving…" : "Add Entry"}
         </button>

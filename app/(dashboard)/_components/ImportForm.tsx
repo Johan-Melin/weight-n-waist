@@ -26,7 +26,7 @@ export function ImportForm() {
           type="button"
           disabled={isPending}
           onClick={() => inputRef.current?.click()}
-          className="text-xs px-2.5 py-1 border rounded-md font-medium border-current/20 hover:border-current/50 transition-colors disabled:opacity-50"
+          className="text-xs px-2.5 py-1 rounded-lg font-medium bg-black/[0.04] dark:bg-white/[0.06] hover:bg-black/[0.07] dark:hover:bg-white/[0.09] transition-colors disabled:opacity-40"
         >
           {isPending ? "Importing…" : "Import CSV"}
         </button>

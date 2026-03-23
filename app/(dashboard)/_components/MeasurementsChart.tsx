@@ -85,22 +85,19 @@ export function MeasurementsChart({
     })
     .sort((a, b) => a.measured_at.localeCompare(b.measured_at));
 
+  const btnBase = "px-2.5 py-1 text-xs rounded-lg font-medium transition-colors";
+  const btnActive = "bg-foreground text-background";
+  const btnIdle = "bg-black/[0.05] dark:bg-white/[0.07] hover:bg-black/[0.08] dark:hover:bg-white/[0.10]";
+  const dateInput = "text-xs rounded-lg px-2 py-1 bg-background border border-black/[0.08] dark:border-white/[0.08] focus:outline-none";
+
   const controls = (
     <div className="flex flex-wrap items-center gap-2">
       <div className="flex gap-1">
         {PRESETS.map((p) => (
           <button
             key={p.value}
-            onClick={() => {
-              setPreset(p.value);
-              setCustomStart("");
-              setCustomEnd("");
-            }}
-            className={`px-2.5 py-1 text-xs rounded-md border font-medium transition-colors ${
-              !isCustom && preset === p.value
-                ? "bg-foreground text-background border-transparent"
-                : "border-current/20 hover:border-current/50"
-            }`}
+            onClick={() => { setPreset(p.value); setCustomStart(""); setCustomEnd(""); }}
+            className={`${btnBase} ${!isCustom && preset === p.value ? btnActive : btnIdle}`}
           >
             {p.label}
           </button>
@@ -108,55 +105,24 @@ export function MeasurementsChart({
       </div>
 
       <div className="flex items-center gap-1.5">
-        <input
-          type="date"
-          value={customStart}
-          onChange={(e) => setCustomStart(e.target.value)}
-          className={`text-xs border rounded-md px-2 py-1 bg-background ${
-            isCustom ? "border-foreground/40" : "border-current/20"
-          }`}
-        />
-        <span className="text-xs opacity-40">–</span>
-        <input
-          type="date"
-          value={customEnd}
-          onChange={(e) => setCustomEnd(e.target.value)}
-          className={`text-xs border rounded-md px-2 py-1 bg-background ${
-            isCustom ? "border-foreground/40" : "border-current/20"
-          }`}
-        />
+        <input type="date" value={customStart} onChange={(e) => setCustomStart(e.target.value)} className={dateInput} />
+        <span className="text-xs opacity-30">–</span>
+        <input type="date" value={customEnd} onChange={(e) => setCustomEnd(e.target.value)} className={dateInput} />
         {isCustom && (
-          <button
-            onClick={() => {
-              setCustomStart("");
-              setCustomEnd("");
-            }}
-            className="text-xs opacity-40 hover:opacity-80 px-1"
-            aria-label="Clear custom range"
-          >
+          <button onClick={() => { setCustomStart(""); setCustomEnd(""); }} className="text-xs opacity-30 hover:opacity-60 px-1" aria-label="Clear">
             ✕
           </button>
         )}
       </div>
 
       <div className="flex items-center gap-3 ml-auto">
-        <button
-          onClick={() => setShowWeight((v) => !v)}
-          className={`flex items-center gap-1.5 text-xs transition-opacity ${
-            showWeight ? "" : "opacity-35"
-          }`}
-        >
-          <span className="inline-block w-4 h-0.5 rounded bg-blue-500" />
-          {unitSystem === "imperial" ? "Weight (lbs)" : "Weight (kg)"}
+        <button onClick={() => setShowWeight((v) => !v)} className={`flex items-center gap-1.5 text-xs transition-opacity ${showWeight ? "" : "opacity-30"}`}>
+          <span className="inline-block w-4 h-[2px] rounded-full bg-blue-500" />
+          <span className={showWeight ? "text-blue-500" : ""}>{unitSystem === "imperial" ? "Weight (lbs)" : "Weight (kg)"}</span>
         </button>
-        <button
-          onClick={() => setShowWaist((v) => !v)}
-          className={`flex items-center gap-1.5 text-xs transition-opacity ${
-            showWaist ? "" : "opacity-35"
-          }`}
-        >
-          <span className="inline-block w-4 h-0.5 rounded bg-orange-500" />
-          {unitSystem === "imperial" ? "Waist (in)" : "Waist (cm)"}
+        <button onClick={() => setShowWaist((v) => !v)} className={`flex items-center gap-1.5 text-xs transition-opacity ${showWaist ? "" : "opacity-30"}`}>
+          <span className="inline-block w-4 h-[2px] rounded-full bg-orange-500" />
+          <span className={showWaist ? "text-orange-500" : ""}>{unitSystem === "imperial" ? "Waist (in)" : "Waist (cm)"}</span>
         </button>
       </div>
     </div>
@@ -164,7 +130,7 @@ export function MeasurementsChart({
 
   if (measurements.length === 0) {
     return (
-      <div className="border rounded-xl p-10 text-center text-sm opacity-50">
+      <div className="rounded-xl p-10 text-center text-sm opacity-40 bg-background">
         No measurements yet — add your first entry above.
       </div>
     );
@@ -174,7 +140,7 @@ export function MeasurementsChart({
     return (
       <div className="space-y-3">
         {controls}
-        <div className="border rounded-xl p-10 text-center text-sm opacity-50">
+        <div className="rounded-xl p-10 text-center text-sm opacity-40 bg-background">
           No entries in this range.
         </div>
       </div>
@@ -264,7 +230,7 @@ export function MeasurementsChart({
     <div className="space-y-3">
       {controls}
 
-      <div className="border rounded-xl overflow-hidden relative select-none">
+      <div className="rounded-xl overflow-hidden relative select-none bg-background">
         <svg
           viewBox={`0 0 ${VW} ${VH}`}
           className="w-full"
@@ -387,7 +353,7 @@ export function MeasurementsChart({
 
         {tooltip && (
           <div
-            className="fixed z-50 pointer-events-none bg-white dark:bg-zinc-900 border border-black/10 dark:border-white/10 rounded-lg shadow-lg px-3 py-2 text-xs"
+            className="fixed z-50 pointer-events-none bg-surface shadow-lg ring-1 ring-black/[0.06] dark:ring-white/[0.06] rounded-lg px-3 py-2 text-xs"
             style={{ left: tooltip.x + 14, top: tooltip.y - 14 }}
           >
             <div className="font-semibold mb-1">

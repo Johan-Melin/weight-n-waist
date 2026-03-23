@@ -22,8 +22,8 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <nav className="flex items-center justify-between border-b px-6 py-3">
-        <Link href="/tracker" className="font-semibold">
+      <nav className="bg-surface border-b border-black/[0.06] dark:border-white/[0.04] flex items-center justify-between px-6 py-3">
+        <Link href="/tracker" className="font-semibold tracking-tight">
           Weight &amp; Waist
         </Link>
         <NavDropdown
@@ -31,7 +31,7 @@ export default async function DashboardLayout({
           unitSystem={unitSystem}
         />
       </nav>
-      <main className="flex-1 px-6 py-8">{children}</main>
+      <main className="flex-1 px-4 py-8 sm:px-6">{children}</main>
     </div>
   );
 }
