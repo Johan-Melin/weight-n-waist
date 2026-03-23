@@ -8,7 +8,7 @@ export default function LoginPage() {
   const [state, action, pending] = useActionState(login, {});
 
   return (
-    <main className="flex min-h-screen items-center justify-center">
+    <main className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-sm space-y-6">
         <h1 className="text-2xl font-semibold">Sign in</h1>
 

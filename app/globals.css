@@ -27,3 +27,15 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
+
+/* Prevent Safari from zooming on input focus (requires font-size >= 16px) */
+input, select, textarea {
+  font-size: 16px;
+}
+
+/* Fix date input text color in dark mode — without this the placeholder
+   text (mm/dd/yyyy) renders dark-on-dark in Safari */
+input[type="date"] {
+  color-scheme: light dark;
+  color: var(--foreground);
+}

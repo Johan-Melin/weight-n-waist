@@ -8,7 +8,7 @@ export default function SignupPage() {
   const [state, action, pending] = useActionState(signup, {});
 
   return (
-    <main className="flex min-h-screen items-center justify-center">
+    <main className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-sm space-y-6">
         <h1 className="text-2xl font-semibold">Create account</h1>
 

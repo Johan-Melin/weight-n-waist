@@ -132,7 +132,7 @@ export function EntryRow({ entry, unitSystem }: { entry: Entry; unitSystem: Unit
         {fmtWaist(entry.waist_cm)}
       </td>
       <td className="py-2.5">
-        <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex items-center justify-end gap-3 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
           <button onClick={startEdit} title="Edit" className="opacity-40 hover:opacity-80 transition-opacity">
             <PenIcon />
           </button>
