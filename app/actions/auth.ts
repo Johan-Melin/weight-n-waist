@@ -36,7 +36,7 @@ export async function signup(
   const password_hash = await bcrypt.hash(password, 12);
   await sql`INSERT INTO users (name, email, password_hash) VALUES (${name}, ${email}, ${password_hash})`;
 
-  await signIn("credentials", { email, password, redirectTo: "/" });
+  await signIn("credentials", { email, password, redirectTo: "/tracker" });
   return {};
 }
 
@@ -45,7 +45,7 @@ export async function login(
   formData: FormData
 ): Promise<ActionState> {
   try {
-    await signIn("credentials", { ...Object.fromEntries(formData), redirectTo: "/" });
+    await signIn("credentials", { ...Object.fromEntries(formData), redirectTo: "/tracker" });
   } catch (e) {
     if (e instanceof AuthError) {
       return { message: "Invalid email or password" };

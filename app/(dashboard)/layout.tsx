@@ -13,8 +13,8 @@ export default async function DashboardLayout({
   return (
     <div className="flex min-h-screen flex-col">
       <nav className="flex items-center justify-between border-b px-6 py-3">
-        <Link href="/" className="font-semibold">
-          App
+        <Link href="/tracker" className="font-semibold">
+          Weight &amp; Waist
         </Link>
         <div className="flex items-center gap-4 text-sm">
           <span>{session.user.name}</span>
