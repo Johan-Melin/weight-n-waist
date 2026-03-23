@@ -17,7 +17,7 @@ export function AddMeasurementForm({ unitSystem }: { unitSystem: UnitSystem }) {
   return (
     <form
       action={formAction}
-      className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_1fr_auto] gap-3 items-end"
+      className="grid grid-cols-2 sm:grid-cols-[1fr_1fr_1fr_auto] gap-3 items-end"
     >
       <input type="hidden" name="unit_system" value={unitSystem} />
 

@@ -8,6 +8,7 @@ import {
 } from "../_components/MeasurementsChart";
 import { EntryRow } from "../_components/EntryRow";
 import { ImportForm } from "../_components/ImportForm";
+import { YearSelect } from "../_components/YearSelect";
 
 type Measurement = {
   id: string;
@@ -114,8 +115,8 @@ export default async function TrackerPage({
       {(latestWeight || latestWaist) && (
         <div className="grid grid-cols-2 gap-4">
           {latestWeight && (
-            <div className="bg-surface rounded-2xl p-5">
-              <p className="text-xs font-medium opacity-40 mb-2">Latest Weight</p>
+            <div className="bg-surface rounded-2xl p-4">
+              <p className="text-xs font-medium opacity-40 mb-1.5">Latest Weight</p>
               <p className="text-3xl font-bold tabular-nums text-blue-500">
                 {toDisplay(latestWeight.weight_kg, 2.20462, unitSystem)}
                 <span className="text-sm font-normal opacity-60 ml-1.5">{weightUnit}</span>
@@ -126,8 +127,8 @@ export default async function TrackerPage({
             </div>
           )}
           {latestWaist && (
-            <div className="bg-surface rounded-2xl p-5">
-              <p className="text-xs font-medium opacity-40 mb-2">Latest Waist</p>
+            <div className="bg-surface rounded-2xl p-4">
+              <p className="text-xs font-medium opacity-40 mb-1.5">Latest Waist</p>
               <p className="text-3xl font-bold tabular-nums text-orange-500">
                 {toDisplay(latestWaist.waist_cm, 0.393701, unitSystem)}
                 <span className="text-sm font-normal opacity-60 ml-1.5">{waistUnit}</span>
@@ -141,22 +142,23 @@ export default async function TrackerPage({
       )}
 
       {/* Add Entry */}
-      <div className="bg-surface rounded-2xl p-6 space-y-4">
-        <h2 className="text-sm font-semibold opacity-50 uppercase tracking-wide">Add Entry</h2>
+      <div className="bg-surface rounded-2xl p-4 space-y-3">
+        <h2 className="text-xs font-semibold opacity-40 uppercase tracking-wide">Add Entry</h2>
         <AddMeasurementForm unitSystem={unitSystem} />
       </div>
 
       {/* Chart */}
-      <div className="bg-surface rounded-2xl p-6 space-y-4">
-        <h2 className="text-sm font-semibold opacity-50 uppercase tracking-wide">Chart</h2>
+      <div className="bg-surface rounded-2xl p-4 space-y-3">
+        <h2 className="text-xs font-semibold opacity-40 uppercase tracking-wide">Chart</h2>
         <MeasurementsChart measurements={allMeasurements} unitSystem={unitSystem} />
       </div>
 
       {/* Entries */}
-      <div className="bg-surface rounded-2xl p-6 space-y-4">
-        <div className="flex flex-wrap items-center gap-2">
-          <h2 className="text-sm font-semibold opacity-50 uppercase tracking-wide">Entries</h2>
+      <div className="bg-surface rounded-2xl p-4 space-y-3">
+        <div className="flex items-center gap-2">
+          <h2 className="text-xs font-semibold opacity-40 uppercase tracking-wide">Entries</h2>
           <div className="flex items-center gap-1.5 ml-auto">
+            <YearSelect years={years} currentYear={year} />
             <a
               href="/api/export"
               className="text-xs px-2.5 py-1 rounded-lg font-medium bg-black/[0.04] dark:bg-white/[0.06] hover:bg-black/[0.07] dark:hover:bg-white/[0.09] transition-colors"
@@ -165,33 +167,6 @@ export default async function TrackerPage({
             </a>
             <ImportForm />
           </div>
-          {years.length > 0 && (
-            <div className="flex items-center gap-1 w-full sm:w-auto">
-              <Link
-                href="/tracker"
-                className={`px-2.5 py-1 text-xs rounded-lg font-medium transition-colors ${
-                  !year
-                    ? "bg-foreground text-background"
-                    : "bg-black/[0.04] dark:bg-white/[0.06] hover:bg-black/[0.07] dark:hover:bg-white/[0.09]"
-                }`}
-              >
-                All
-              </Link>
-              {years.map((y) => (
-                <Link
-                  key={y}
-                  href={`/tracker?year=${y}`}
-                  className={`px-2.5 py-1 text-xs rounded-lg font-medium transition-colors ${
-                    year === String(y)
-                      ? "bg-foreground text-background"
-                      : "bg-black/[0.04] dark:bg-white/[0.06] hover:bg-black/[0.07] dark:hover:bg-white/[0.09]"
-                  }`}
-                >
-                  {y}
-                </Link>
-              ))}
-            </div>
-          )}
         </div>
 
         {entries.length === 0 ? (

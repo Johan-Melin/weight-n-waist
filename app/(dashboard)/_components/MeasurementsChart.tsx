@@ -91,39 +91,41 @@ export function MeasurementsChart({
   const dateInput = "text-xs rounded-lg px-2 py-1 bg-background border border-black/[0.08] dark:border-white/[0.08] focus:outline-none";
 
   const controls = (
-    <div className="flex flex-wrap items-center gap-2">
-      <div className="flex gap-1">
-        {PRESETS.map((p) => (
-          <button
-            key={p.value}
-            onClick={() => { setPreset(p.value); setCustomStart(""); setCustomEnd(""); }}
-            className={`${btnBase} ${!isCustom && preset === p.value ? btnActive : btnIdle}`}
-          >
-            {p.label}
+    <div className="space-y-2">
+      {/* Row 1: presets + legend */}
+      <div className="flex items-center gap-2">
+        <div className="flex gap-1">
+          {PRESETS.map((p) => (
+            <button
+              key={p.value}
+              onClick={() => { setPreset(p.value); setCustomStart(""); setCustomEnd(""); }}
+              className={`${btnBase} ${!isCustom && preset === p.value ? btnActive : btnIdle}`}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+        <div className="flex items-center gap-3 ml-auto">
+          <button onClick={() => setShowWeight((v) => !v)} className={`flex items-center gap-1.5 text-xs transition-opacity ${showWeight ? "" : "opacity-30"}`}>
+            <span className="inline-block w-3.5 h-[2px] rounded-full bg-blue-500" />
+            <span className={showWeight ? "text-blue-500" : ""}>{unitSystem === "imperial" ? "lbs" : "kg"}</span>
           </button>
-        ))}
+          <button onClick={() => setShowWaist((v) => !v)} className={`flex items-center gap-1.5 text-xs transition-opacity ${showWaist ? "" : "opacity-30"}`}>
+            <span className="inline-block w-3.5 h-[2px] rounded-full bg-orange-500" />
+            <span className={showWaist ? "text-orange-500" : ""}>{unitSystem === "imperial" ? "in" : "cm"}</span>
+          </button>
+        </div>
       </div>
-
+      {/* Row 2: custom date range */}
       <div className="flex items-center gap-1.5">
-        <input type="date" value={customStart} onChange={(e) => setCustomStart(e.target.value)} className={dateInput} />
-        <span className="text-xs opacity-30">–</span>
-        <input type="date" value={customEnd} onChange={(e) => setCustomEnd(e.target.value)} className={dateInput} />
+        <input type="date" value={customStart} onChange={(e) => setCustomStart(e.target.value)} className={`${dateInput} flex-1 min-w-0`} />
+        <span className="text-xs opacity-30 shrink-0">–</span>
+        <input type="date" value={customEnd} onChange={(e) => setCustomEnd(e.target.value)} className={`${dateInput} flex-1 min-w-0`} />
         {isCustom && (
-          <button onClick={() => { setCustomStart(""); setCustomEnd(""); }} className="text-xs opacity-30 hover:opacity-60 px-1" aria-label="Clear">
+          <button onClick={() => { setCustomStart(""); setCustomEnd(""); }} className="text-xs opacity-30 hover:opacity-60 shrink-0" aria-label="Clear">
             ✕
           </button>
         )}
-      </div>
-
-      <div className="flex items-center gap-3 ml-auto">
-        <button onClick={() => setShowWeight((v) => !v)} className={`flex items-center gap-1.5 text-xs transition-opacity ${showWeight ? "" : "opacity-30"}`}>
-          <span className="inline-block w-4 h-[2px] rounded-full bg-blue-500" />
-          <span className={showWeight ? "text-blue-500" : ""}>{unitSystem === "imperial" ? "Weight (lbs)" : "Weight (kg)"}</span>
-        </button>
-        <button onClick={() => setShowWaist((v) => !v)} className={`flex items-center gap-1.5 text-xs transition-opacity ${showWaist ? "" : "opacity-30"}`}>
-          <span className="inline-block w-4 h-[2px] rounded-full bg-orange-500" />
-          <span className={showWaist ? "text-orange-500" : ""}>{unitSystem === "imperial" ? "Waist (in)" : "Waist (cm)"}</span>
-        </button>
       </div>
     </div>
   );
