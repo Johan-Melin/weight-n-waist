@@ -33,9 +33,10 @@ input, select, textarea {
   font-size: 16px;
 }
 
-/* Fix date input text color in dark mode — without this the placeholder
-   text (mm/dd/yyyy) renders dark-on-dark in Safari */
+/* Fix date input text color in dark mode.
+   Do NOT use color-scheme here — it causes iOS Safari to render a black background.
+   Setting color + background explicitly is enough for both Firefox and Safari. */
 input[type="date"] {
-  color-scheme: light dark;
   color: var(--foreground);
+  background-color: var(--surface);
 }
