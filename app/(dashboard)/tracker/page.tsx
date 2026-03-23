@@ -15,10 +15,22 @@ type Measurement = {
   waist_cm: number | null;
 };
 
+type UnitSystem = "metric" | "imperial";
+
 const PER_PAGE = 20;
 
 function parseDay(s: string) {
   return new Date(s + "T00:00:00");
+}
+
+function toDisplay(
+  value: number | null,
+  factor: number,
+  unit: UnitSystem
+): string {
+  if (value == null) return "–";
+  if (unit === "imperial") return (value * factor).toFixed(1);
+  return value.toString();
 }
 
 export default async function TrackerPage({
@@ -32,6 +44,15 @@ export default async function TrackerPage({
   const page = Math.max(1, parseInt(pageStr ?? "1") || 1);
   const offset = (page - 1) * PER_PAGE;
   const yearNum = year ? parseInt(year) : null;
+
+  // User preference
+  const prefRows = (await sql`
+    SELECT unit_system FROM users WHERE id = ${user.id} LIMIT 1
+  `) as Array<{ unit_system: string }>;
+  const unitSystem = (prefRows[0]?.unit_system ?? "metric") as UnitSystem;
+
+  const weightUnit = unitSystem === "imperial" ? "lbs" : "kg";
+  const waistUnit = unitSystem === "imperial" ? "in" : "cm";
 
   // Available years for filter
   const yearRows = (await sql`
@@ -111,9 +132,9 @@ export default async function TrackerPage({
             <div className="border rounded-xl p-4">
               <p className="text-xs opacity-50 mb-1">Latest Weight</p>
               <p className="text-3xl font-bold tabular-nums">
-                {latestWeight.weight_kg}
+                {toDisplay(latestWeight.weight_kg, 2.20462, unitSystem)}
                 <span className="text-base font-normal opacity-50 ml-1">
-                  kg
+                  {weightUnit}
                 </span>
               </p>
               <p className="text-xs opacity-40 mt-1">
@@ -125,9 +146,9 @@ export default async function TrackerPage({
             <div className="border rounded-xl p-4">
               <p className="text-xs opacity-50 mb-1">Latest Waist</p>
               <p className="text-3xl font-bold tabular-nums">
-                {latestWaist.waist_cm}
+                {toDisplay(latestWaist.waist_cm, 0.393701, unitSystem)}
                 <span className="text-base font-normal opacity-50 ml-1">
-                  cm
+                  {waistUnit}
                 </span>
               </p>
               <p className="text-xs opacity-40 mt-1">
@@ -141,13 +162,13 @@ export default async function TrackerPage({
       {/* Add form */}
       <section className="space-y-4">
         <h2 className="text-base font-semibold">Add Entry</h2>
-        <AddMeasurementForm />
+        <AddMeasurementForm unitSystem={unitSystem} />
       </section>
 
       {/* Chart */}
       <section className="space-y-4">
         <h2 className="text-base font-semibold">Chart</h2>
-        <MeasurementsChart measurements={allMeasurements} />
+        <MeasurementsChart measurements={allMeasurements} unitSystem={unitSystem} />
       </section>
 
       {/* Entries table */}
@@ -195,10 +216,10 @@ export default async function TrackerPage({
                       Date
                     </th>
                     <th className="text-left py-2 pr-6 font-medium opacity-60">
-                      Weight (kg)
+                      Weight ({weightUnit})
                     </th>
                     <th className="text-left py-2 pr-6 font-medium opacity-60">
-                      Waist (cm)
+                      Waist ({waistUnit})
                     </th>
                     <th className="py-2" />
                   </tr>
@@ -213,10 +234,10 @@ export default async function TrackerPage({
                         {parseDay(entry.measured_at).toLocaleDateString()}
                       </td>
                       <td className="py-2.5 pr-6 tabular-nums">
-                        {entry.weight_kg ?? "–"}
+                        {toDisplay(entry.weight_kg, 2.20462, unitSystem)}
                       </td>
                       <td className="py-2.5 pr-6 tabular-nums">
-                        {entry.waist_cm ?? "–"}
+                        {toDisplay(entry.waist_cm, 0.393701, unitSystem)}
                       </td>
                       <td className="py-2.5 text-right">
                         <DeleteButton id={entry.id} />

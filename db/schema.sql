@@ -22,3 +22,6 @@ CREATE TABLE IF NOT EXISTS measurements (
 );
 
 CREATE INDEX IF NOT EXISTS measurements_user_date ON measurements(user_id, measured_at DESC);
+
+ALTER TABLE users ADD COLUMN IF NOT EXISTS unit_system TEXT NOT NULL DEFAULT 'metric'
+  CHECK (unit_system IN ('metric', 'imperial'));

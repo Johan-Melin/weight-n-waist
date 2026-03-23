@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { sql } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
@@ -38,6 +38,10 @@ export async function signup(
 
   await signIn("credentials", { email, password, redirectTo: "/tracker" });
   return {};
+}
+
+export async function signOutAction(): Promise<void> {
+  await signOut({ redirectTo: "/login" });
 }
 
 export async function login(

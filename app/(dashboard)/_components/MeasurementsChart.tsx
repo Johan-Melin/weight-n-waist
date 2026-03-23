@@ -40,10 +40,23 @@ function fmtDate(s: string) {
   });
 }
 
+type UnitSystem = "metric" | "imperial";
+
+function convertWeight(kg: number | null, unit: UnitSystem) {
+  if (kg == null) return null;
+  return unit === "imperial" ? kg * 2.20462 : kg;
+}
+function convertWaist(cm: number | null, unit: UnitSystem) {
+  if (cm == null) return null;
+  return unit === "imperial" ? cm * 0.393701 : cm;
+}
+
 export function MeasurementsChart({
   measurements,
+  unitSystem = "metric",
 }: {
   measurements: ChartMeasurement[];
+  unitSystem?: UnitSystem;
 }) {
   const [preset, setPreset] = useState<Preset>("3M");
   const [customStart, setCustomStart] = useState("");
@@ -134,7 +147,7 @@ export function MeasurementsChart({
           }`}
         >
           <span className="inline-block w-4 h-0.5 rounded bg-blue-500" />
-          Weight (kg)
+          {unitSystem === "imperial" ? "Weight (lbs)" : "Weight (kg)"}
         </button>
         <button
           onClick={() => setShowWaist((v) => !v)}
@@ -143,7 +156,7 @@ export function MeasurementsChart({
           }`}
         >
           <span className="inline-block w-4 h-0.5 rounded bg-orange-500" />
-          Waist (cm)
+          {unitSystem === "imperial" ? "Waist (in)" : "Waist (cm)"}
         </button>
       </div>
     </div>
@@ -168,10 +181,17 @@ export function MeasurementsChart({
     );
   }
 
+  // Convert values to display unit
+  const displayFiltered = filtered.map((m) => ({
+    ...m,
+    weight_kg: convertWeight(m.weight_kg, unitSystem),
+    waist_cm: convertWaist(m.waist_cm, unitSystem),
+  }));
+
   // Collect values for Y scale
   const vals: number[] = [];
-  if (showWeight) filtered.forEach((m) => m.weight_kg != null && vals.push(m.weight_kg));
-  if (showWaist) filtered.forEach((m) => m.waist_cm != null && vals.push(m.waist_cm));
+  if (showWeight) displayFiltered.forEach((m) => m.weight_kg != null && vals.push(m.weight_kg));
+  if (showWaist) displayFiltered.forEach((m) => m.waist_cm != null && vals.push(m.waist_cm));
 
   if (vals.length === 0) {
     return (
@@ -208,7 +228,7 @@ export function MeasurementsChart({
   const dotR = filtered.length < 60 ? 3.5 : 2;
 
   const weightPts = showWeight
-    ? filtered
+    ? displayFiltered
         .filter((m) => m.weight_kg != null)
         .map(
           (m) =>
@@ -218,7 +238,7 @@ export function MeasurementsChart({
     : "";
 
   const waistPts = showWaist
-    ? filtered
+    ? displayFiltered
         .filter((m) => m.waist_cm != null)
         .map(
           (m) =>
@@ -328,7 +348,7 @@ export function MeasurementsChart({
 
           {/* Dots */}
           {showWeight &&
-            filtered.map(
+            displayFiltered.map(
               (m, i) =>
                 m.weight_kg != null && (
                   <circle
@@ -346,7 +366,7 @@ export function MeasurementsChart({
                 )
             )}
           {showWaist &&
-            filtered.map(
+            displayFiltered.map(
               (m, i) =>
                 m.waist_cm != null && (
                   <circle
@@ -375,12 +395,14 @@ export function MeasurementsChart({
             </div>
             {tooltip.item.weight_kg != null && (
               <div className="text-blue-500">
-                Weight: {tooltip.item.weight_kg} kg
+                Weight: {typeof tooltip.item.weight_kg === "number" ? tooltip.item.weight_kg.toFixed(1) : tooltip.item.weight_kg}{" "}
+                {unitSystem === "imperial" ? "lbs" : "kg"}
               </div>
             )}
             {tooltip.item.waist_cm != null && (
               <div className="text-orange-500">
-                Waist: {tooltip.item.waist_cm} cm
+                Waist: {typeof tooltip.item.waist_cm === "number" ? tooltip.item.waist_cm.toFixed(1) : tooltip.item.waist_cm}{" "}
+                {unitSystem === "imperial" ? "in" : "cm"}
               </div>
             )}
           </div>

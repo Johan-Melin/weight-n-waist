@@ -58,7 +58,14 @@ export async function addMeasurement(
     };
   }
 
-  const { measured_at, weight_kg, waist_cm } = parsed.data;
+  let { measured_at, weight_kg, waist_cm } = parsed.data;
+
+  // Convert from imperial to metric for storage
+  const unitSystem = formData.get("unit_system");
+  if (unitSystem === "imperial") {
+    if (weight_kg != null) weight_kg = weight_kg / 2.20462;
+    if (waist_cm != null) waist_cm = waist_cm / 0.393701;
+  }
 
   await sql`
     INSERT INTO measurements (user_id, measured_at, weight_kg, waist_cm)
